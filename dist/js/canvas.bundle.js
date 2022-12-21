@@ -124,17 +124,23 @@ addEventListener('resize', function () {
   init();
 }); // Objects
 
-var _Object = /*#__PURE__*/function () {
-  function Object(x, y, radius, color) {
-    _classCallCheck(this, Object);
+var Particle = /*#__PURE__*/function () {
+  function Particle(x, y, radius, color) {
+    _classCallCheck(this, Particle);
 
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
+    this.radians = Math.random() * (Math.PI * 2);
+    this.velocity = 0.05;
+    this.distanceFromCenter = {
+      x: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randomIntFromRange"])(50, 120),
+      y: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["randomIntFromRange"])(50, 120)
+    };
   }
 
-  _createClass(Object, [{
+  _createClass(Particle, [{
     key: "draw",
     value: function draw() {
       c.beginPath();
@@ -146,20 +152,27 @@ var _Object = /*#__PURE__*/function () {
   }, {
     key: "update",
     value: function update() {
+      this.radians += this.velocity;
+      this.x = x + Math.cos(this.radians) * this.distanceFromCenter.x;
+      this.y = y + Math.sin(this.radians) * this.distanceFromCenter.y;
       this.draw();
     }
   }]);
 
-  return Object;
+  return Particle;
 }(); // Implementation
 
 
-var objects;
+var particles;
+var x = canvas.width / 2; // Saving the particles original x position.
+
+var y = canvas.height / 2; // Saving the particles original y position.
 
 function init() {
-  objects = [];
+  particles = [];
 
-  for (var i = 0; i < 400; i++) {// objects.push()
+  for (var i = 0; i < 50; i++) {
+    particles.push(new Particle(x, y, 5, 'blue'));
   }
 } // Animation Loop
 
@@ -167,9 +180,9 @@ function init() {
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y); // objects.forEach(object => {
-  //  object.update()
-  // })
+  particles.forEach(function (particle) {
+    particle.update();
+  });
 }
 
 init();

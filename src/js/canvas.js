@@ -1,4 +1,4 @@
-import utils from './utils'
+import utils, {randomIntFromRange} from './utils'
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -27,12 +27,18 @@ addEventListener('resize', () => {
 });
 
 // Objects
-class Object {
+class Particle {
   constructor(x, y, radius, color) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
+    this.radians = Math.random() * (Math.PI * 2);
+    this.velocity = 0.05;
+    this.distanceFromCenter = {
+      x: randomIntFromRange(50,120),
+      y: randomIntFromRange(50,120)
+    }
   }
 
   draw() {
@@ -44,17 +50,23 @@ class Object {
   }
 
   update() {
+    this.radians += this.velocity;
+    this.x = x + Math.cos(this.radians) * this.distanceFromCenter.x;
+    this.y = y + Math.sin(this.radians) * this.distanceFromCenter.y
     this.draw();
   }
 }
 
 // Implementation
-let objects
-function init() {
-  objects = [];
+let particles;
+let x = canvas.width / 2; // Saving the particles original x position.
+let y = canvas.height / 2; // Saving the particles original y position.
 
-  for (let i = 0; i < 400; i++) {
-    // objects.push()
+function init() {
+  particles = [];
+
+  for (let i = 0; i < 50; i++) {
+    particles.push(new Particle(x, y,5, 'blue'));
   }
 }
 
@@ -63,10 +75,9 @@ function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
-  // objects.forEach(object => {
-  //  object.update()
-  // })
+  particles.forEach(particle => {
+   particle.update();
+  })
 }
 
 init();
