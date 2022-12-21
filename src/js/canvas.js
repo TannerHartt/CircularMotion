@@ -19,6 +19,7 @@ addEventListener('mousemove', (event) => {
   mouse.y = event.clientY
 });
 
+// Automatically resets the canvas when the window size changes.
 addEventListener('resize', () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
@@ -35,27 +36,40 @@ class Particle {
     this.color = color;
     this.radians = Math.random() * (Math.PI * 2);
     this.velocity = 0.05;
-    this.distanceFromCenter = {
-      x: randomIntFromRange(50,120),
-      y: randomIntFromRange(50,120)
+    this.distanceFromCenter = randomIntFromRange(50,120);
+    this.lastMouse = {
+      x: x,
+      y: y
     }
   }
 
   draw() {
     c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
+    c.strokeStyle = this.color;
+    c.lineWidth = this.radius;
+    c.moveTo(lastPoint.x, lastPoint.y);
+    c.lineTo(this.x, this.y);
+    c.stroke();
     c.closePath();
   }
 
   update() {
+    lastPoint.x = this.x; // Save previous x position before any updates.
+    lastPoint.y = this.y; // Save previous y position before any updates.
     this.radians += this.velocity;
-    this.x = x + Math.cos(this.radians) * this.distanceFromCenter.x;
-    this.y = y + Math.sin(this.radians) * this.distanceFromCenter.y
+
+    // Create drag effect
+    this.lastMouse.x += (mouse.x - this.lastMouse.x) * 0.05;
+    this.lastMouse.y += (mouse.y - this.lastMouse.y) * 0.05;
+
+    this.x = this.lastMouse.x + Math.cos(this.radians) * this.distanceFromCenter;
+    this.y = this.lastMouse.y + Math.sin(this.radians) * this.distanceFromCenter;
     this.draw();
   }
 }
+
+// Initially empty but will store the point of a particle before any updates are made to it.
+const lastPoint = {x: undefined, y: undefined}
 
 // Implementation
 let particles;
@@ -66,18 +80,20 @@ function init() {
   particles = [];
 
   for (let i = 0; i < 50; i++) {
-    particles.push(new Particle(x, y,5, 'blue'));
+    let radius = (Math.random() * 3) - 1;
+    particles.push(new Particle(x, y, radius, 'blue'));
   }
 }
 
 // Animation Loop
 function animate() {
   requestAnimationFrame(animate);
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  c.fillStyle = 'rgba(255,255,255,0.05)';
+  c.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach(particle => {
    particle.update();
-  })
+  });
 }
 
 init();
