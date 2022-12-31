@@ -115,6 +115,7 @@ var mouse = {
 var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']; // Event Listeners
 
 addEventListener('mousemove', function (event) {
+  // mouse x and y positions
   mouse.x = event.clientX;
   mouse.y = event.clientY;
 }); // Automatically resets the canvas when the window size changes.

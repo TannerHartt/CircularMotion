@@ -14,7 +14,7 @@ const mouse = {
 const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
 
 // Event Listeners
-addEventListener('mousemove', (event) => {
+addEventListener('mousemove', (event) => { // mouse x and y positions
   mouse.x = event.clientX
   mouse.y = event.clientY
 });
@@ -23,7 +23,6 @@ addEventListener('mousemove', (event) => {
 addEventListener('resize', () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
-
   init();
 });
 
