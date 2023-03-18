@@ -17,5 +17,3 @@ Canvas Boilerplate is the go-to solution for quickly creating modern canvas piec
 3.  Run webpack:
 
         npm start
-
-Your canvas piece should open up automatically at http://localhost:3000 and you should see 'HTML CANVAS BOILERPLATE' on hover.
